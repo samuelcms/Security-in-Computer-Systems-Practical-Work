@@ -1,9 +1,8 @@
-# Extraindo texto de imagens em Android - OCR App
+# Projeto Token - Login utilizando token e OpenSSL
 
-Trabalho prático da disciplina Programação para Dispositivos Móveis e Sem Fio. O intuito do projeto é mostrar uma implementação da API de reconhecimento de texto do ML Kit para extrair texto de imagens em Android. 
+Trabalho prático da disciplina Segurança em Sistemas Computacionais. O intuito do projeto é criar uma aplicação simples para simular o login utilizando token, como uma camada extra de segurança. 
+Cada usuário que possui direito de acesso possui um par de chaves assimétricas (pública e privada) gerados através do [OpenSSL](https://www.openssl.org/), desta forma, basta inserir o token USB e identificar-se com seu nome de usuário e senha da chave privada que o sistema fará a verificação de autenticidade, ou seja, se a chave pública é realmente derivada da chave privada e se a senha está correta
 
 Referências:
 
-  - ML Kit: https://developers.google.com/ml-kit?hl=pt-br
-  - Text recognition v2: https://developers.google.com/ml-kit/vision/text-recognition/v2?hl=pt-br
-  - Projeto base: https://youtu.be/1wewsm0Av98
+  - Documentação do OpenSSL: https://www.openssl.org/docs/
