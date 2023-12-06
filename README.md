@@ -13,7 +13,6 @@ Cada usuário que possui direito de acesso possui um par de chaves assimétricas
 Abaixo há a interação de login bem sucedida:
 
 ![image](https://github.com/samuelcms/Security-in-Computer-Systems-Practcical-Work/assets/44274148/8c0e585c-069b-4e0b-97a6-ee19269a1585)
-  
   O usuário insere o token contendo sua chave privada.
 
 
