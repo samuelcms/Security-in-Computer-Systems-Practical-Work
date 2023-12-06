@@ -15,6 +15,7 @@ Abaixo há a interação de login bem sucedida:
 <br/>
 
 ![image](https://github.com/samuelcms/Security-in-Computer-Systems-Practcical-Work/assets/44274148/8c0e585c-069b-4e0b-97a6-ee19269a1585)
+
 <span style="font-size: smaller; margin-top: -10px;">O usuário insere o token contendo sua chave privada.</span>
 
 <br/>
