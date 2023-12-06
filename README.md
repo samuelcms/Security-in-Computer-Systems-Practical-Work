@@ -16,7 +16,7 @@ Abaixo há a interação de login bem sucedida:
 _O usuário insere o token contendo sua chave privada._
 
 ![image](https://github.com/samuelcms/Security-in-Computer-Systems-Practcical-Work/assets/44274148/0c4d0363-c601-4c69-afc4-e80297c45c2a)
-_Logo após, fornece seu nome de usuário e a senha da chave privada._
+*Logo após, fornece seu nome de usuário e a senha da chave privada.*
 
 ![image](https://github.com/samuelcms/Security-in-Computer-Systems-Practcical-Work/assets/44274148/9e6b00b6-b366-4f7f-94ee-b771e15d1673)
 _O sistema verifica a autenticidade e correspondência das chaves e aprova o login._
