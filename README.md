@@ -5,8 +5,8 @@ Cada usuário que possui direito de acesso possui um par de chaves assimétricas
 
 # Referências
 
-  - Site OpenSSL: https://www.openssl.org/docs/
-  - Site API Bouncy Castle: https://www.bouncycastle.org/java.html
+  - Documentação oficial OpenSSL: https://www.openssl.org/docs/
+  - API Bouncy Castle: https://www.bouncycastle.org/java.html
 
 # Imagens
 
