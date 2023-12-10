@@ -4,6 +4,8 @@ import static br.openssl.constants.Constants.KEY_EXTENSION;
 import static br.openssl.constants.Constants.PRIV_KEY_PREFIX;
 import static br.openssl.constants.Constants.PUB_KEY_PATH;
 import static br.openssl.constants.Constants.PUB_KEY_PREFIX;
+import static br.openssl.gui.GraphicUserInterface.showCustomDialog;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -17,6 +19,7 @@ import javax.crypto.BadPaddingException;
 
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.crypto.io.InvalidCipherTextIOException;
 import org.bouncycastle.openssl.PEMEncryptedKeyPair;
 import org.bouncycastle.openssl.PEMKeyPair;
@@ -78,7 +81,10 @@ public class KeyTools
 				{
 					BadPaddingException bpe = (BadPaddingException) e.getCause();
 					System.out.println("Detalhes do erro: " + bpe.getMessage());
-					System.out.println("Senha incorreta. Por favor, verifique a senha e tente novamente.");
+					//System.out.println("Senha incorreta. Por favor, verifique a senha e tente novamente.");
+					
+					showCustomDialog("Status do Login", "Senha incorreta.", ERROR_MESSAGE);
+					
 					return null;
 				} 
 				else 
@@ -105,6 +111,8 @@ public class KeyTools
 
 			// Lê o próximo objeto PEM do arquivo.
 			Object pemObject = pemParser.readObject();
+			
+			// System.out.println("Tipo do objeto PEM lido: " + pemObject.getClass().getName());
 
             // Verifica se o objeto lido é uma chave pública no formato SubjectPublicKeyInfo.
 	        if (pemObject instanceof SubjectPublicKeyInfo) {
@@ -123,11 +131,24 @@ public class KeyTools
 	        {
 	            // Converte o objeto PEM em X509Certificate.
 	            X509Certificate certificate = (X509Certificate) pemObject;
-
+	            
 	            // Obtém a chave pública do certificado e retorna.
 	            return certificate.getPublicKey();
 
+	        }
+	        // Verifica se o objeto lido é um certificado no formato X509Certificate.
+	        else if (pemObject instanceof X509CertificateHolder) 
+	        {
+	            // Converte o objeto PEM em X509CertificateHolder.
+	            X509CertificateHolder certificateHolder = (X509CertificateHolder) pemObject;
+
+	            // Cria um conversor PEM para chaves usando o provedor Bouncy Castle (BC).
+	            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+
+	            // Converte X509CertificateHolder em X509Certificate usando o conversor e retorna a chave pública.
+	            return converter.getPublicKey(certificateHolder.getSubjectPublicKeyInfo());
 	        } 
+	        
 	        else 
 	        {
 	            // Lança uma exceção indicando que o formato da chave pública não é reconhecido.

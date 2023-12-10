@@ -44,7 +44,8 @@ public class LoginTools
 
 			if (!Files.exists(Paths.get(publicKeyPath))) 
 			{
-				System.out.println("Chave pública não encontrada");
+				showCustomDialog("Chave Pública", "Chave pública não encontrada.", ERROR_MESSAGE);
+				//System.out.println("Chave pública não encontrada");
 				// System.exit(1);
 			}
 
@@ -53,7 +54,7 @@ public class LoginTools
 
 			if (privateKey != null && publicKey != null) 
 			{
-				System.out.println("Chaves privada e pública lidas com sucesso!");
+				//System.out.println("Chaves privada e pública lidas com sucesso!");
 
 				// Criando o arquivo que será criptografado com a chave privada.
 				String unencryptedFile = "Files/arquivo_descriptografado.txt";
