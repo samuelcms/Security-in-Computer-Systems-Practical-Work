@@ -5,12 +5,15 @@ import static br.openssl.constants.Constants.MEDIA_PATH;
 import static br.openssl.constants.Constants.TOKEN_NAME;
 import static br.openssl.filesystem.PathTools.countDevices;
 import static br.openssl.filesystem.PathTools.tokenPath;
-import static br.openssl.key.KeyTools.generateKeyName;
+import static br.openssl.gui.GraphicUserInterface.LOGIN_INDEX;
+import static br.openssl.gui.GraphicUserInterface.PASSWD_INDEX;
+import static br.openssl.gui.GraphicUserInterface.showCustomDialog;
+import static br.openssl.gui.GraphicUserInterface.showLoginDialog;
+import static br.openssl.gui.GraphicUserInterface.showTokenStatusDialog;
 import static br.openssl.key.KeyTools.userExists;
 import static br.openssl.login.LoginTools.approveLogin;
-
-import static br.openssl.gui.GraphicUserInterface.*;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 
 import java.io.IOException;
 import java.nio.file.FileStore;
@@ -21,6 +24,8 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.List;
 import java.util.Scanner;
+
+import br.openssl.key.KeyTools;
 
 public class TokenSSL 
 {
@@ -41,13 +46,10 @@ public class TokenSSL
 
 	    // Inicializa o número de registros com a quantidade atual de registeros do diretório de discos.
 		numberDevices = countDevices(directory);
-		
+				
         // Verifica se o token já está inserido.
 		if (tokenExists(TOKEN_NAME)) 
-		{		
-			// TEMP
-			// System.out.println("- Token já inserido.");
-			
+		{					
 			showTokenStatusDialog(true);
 			
 			List<String> loginFields = showLoginDialog();
@@ -61,16 +63,20 @@ public class TokenSSL
 						
 				if(userExists(username))
 				{
-					String privKeyName = generateKeyName(username, true);
-					String privKey = String.format("%s/%s", tokenPath(Path.of(MEDIA_PATH), TOKEN_NAME), privKeyName);
-					
-					if(approveLogin(privKey, username, password)) 
-						showCustomDialog("Status do Login", "Login aprovado!", INFORMATION_MESSAGE); 
-						// System.out.println("Login aprovado");
-					
-					else
-						showCustomDialog("Status do Login", "Não foi possível realizar o login.\nInsira novamente seu token e credenciais.", ERROR_MESSAGE);
-						//System.out.println("Login inválido. Insira novamente seu token e credenciais.");
+					String privKeyName = KeyTools.getPrivKey();
+					if(privKeyName != null)
+					{
+						String privKey = String.format("%s/%s", tokenPath(Path.of(MEDIA_PATH), TOKEN_NAME), privKeyName);
+						
+						if(approveLogin(privKey, username, password)) 
+							showCustomDialog("Status do Login", "Login aprovado!", INFORMATION_MESSAGE); 
+							// System.out.println("Login aprovado");
+						
+						else
+							showCustomDialog("Status do Login", "Não foi possível realizar o login.\nInsira novamente seu token e credenciais.", ERROR_MESSAGE);
+							//System.out.println("Login inválido. Insira novamente seu token e credenciais.");
+					}
+					else showCustomDialog("Chave Privada", "Chave privada não encontrada.", ERROR_MESSAGE);
 				}
 				
 				else showCustomDialog("Status do Login", "Usuário não encontrado!\nInsira novamente seu token e credenciais.", ERROR_MESSAGE);	
@@ -129,19 +135,23 @@ public class TokenSSL
 										
 						if(userExists(username))
 						{
-							String privKeyName = generateKeyName(username, true);
-							String privKey = String.format("%s/%s", tokenPath(Path.of(MEDIA_PATH), TOKEN_NAME), privKeyName);
-													
-							if(approveLogin(privKey, username, password)) 
-								showCustomDialog("Status do Login", "Login aprovado!", INFORMATION_MESSAGE); 
+							String privKeyName = KeyTools.getPrivKey();
+
+							if(privKeyName != null)
+							{
+								String privKey = String.format("%s/%s", tokenPath(Path.of(MEDIA_PATH), TOKEN_NAME), privKeyName);
+
+								if(approveLogin(privKey, username, password)) 
+									showCustomDialog("Status do Login", "Login aprovado!", INFORMATION_MESSAGE); 
 								// System.out.println("Login aprovado");
-							
-							else
-								showCustomDialog("Status do Login", "Não foi possível realizar o login.\nInsira novamente seu token e credenciais.", ERROR_MESSAGE);
+
+								else
+									showCustomDialog("Status do Login", "Não foi possível realizar o login.\nInsira novamente seu token e credenciais.", ERROR_MESSAGE);
 								//System.out.println("Login inválido. Insira novamente seu token e credenciais.");
-							
-							TOKEN_PRESENTE = true;
-							return true;
+
+								TOKEN_PRESENTE = true;
+								return true;
+							}
 						}
 						else
 						{
@@ -153,7 +163,6 @@ public class TokenSSL
 					}
 					else
 						showCustomDialog("Status do Login", "Login cancelado!", ERROR_MESSAGE);	
-						
 				}
 			} 
 			else 

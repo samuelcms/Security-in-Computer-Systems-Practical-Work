@@ -1,13 +1,17 @@
 package br.openssl.key;
 
 import static br.openssl.constants.Constants.KEY_EXTENSION;
+import static br.openssl.constants.Constants.MEDIA_PATH;
 import static br.openssl.constants.Constants.PRIV_KEY_PREFIX;
 import static br.openssl.constants.Constants.PUB_KEY_PATH;
 import static br.openssl.constants.Constants.PUB_KEY_PREFIX;
+import static br.openssl.constants.Constants.TOKEN_NAME;
 import static br.openssl.gui.GraphicUserInterface.showCustomDialog;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -165,6 +169,34 @@ public class KeyTools
 	public static String generateKeyName(String username, boolean privateKey)
 	{
 		return String.format("%s%s%s", (privateKey) ? PRIV_KEY_PREFIX : PUB_KEY_PREFIX, username, KEY_EXTENSION);
+	}
+
+	public static String getPrivKey()
+	{
+		try 
+		{
+			String usbPath = String.format("%s/%s", MEDIA_PATH, TOKEN_NAME);
+			
+			// Executa o comando "ls" par alistra o conteúdo do arquivo e procura alguma chave no Token.
+			ProcessBuilder processBuilder = new ProcessBuilder("ls", usbPath);
+			processBuilder.redirectErrorStream(true);
+			Process process = processBuilder.start();
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+
+			// Procurar arquivos com extensão .pem
+			while ((line = reader.readLine()) != null) 
+				if (line.endsWith(KEY_EXTENSION)) 
+					return line;
+		} 
+		catch (IOException e)
+		{
+			//e.printStackTrace();
+			return null;
+		}
+    
+		return null;
 	}
 	
 	public static boolean userExists(String username) 
